@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechNova '25 | Event Registration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(30, 58, 138, 0.5) 0, transparent 50%), 
+                radial-gradient(at 100% 100%, rgba(88, 28, 135, 0.5) 0, transparent 50%);
+            min-height: 100vh;
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .input-field {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+            outline: none;
+        }
+
+        .step-indicator.active {
+            background-color: #3b82f6;
+            color: white;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+        }
+
+        .hidden-step {
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="text-slate-200 p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto">
+        <!-- Header Section -->
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 mb-2">
+                TECHNOVA '25
+            </h1>
+            <p class="text-slate-400 text-lg">Unleashing the Future | Annual Technical Symposium</p>
+        </header>
+
+        <!-- Main Form Card -->
+        <div class="glass-card rounded-3xl p-6 md:p-10 shadow-2xl relative overflow-hidden">
+            
+            <!-- Progress Bar -->
+            <div class="flex items-center justify-between mb-10 relative">
+                <div class="absolute top-1/2 left-0 w-full h-0.5 bg-slate-700 -z-10 transform -translate-y-1/2"></div>
+                <div id="step1-badge" class="step-indicator active w-10 h-10 rounded-full flex items-center justify-center font-bold bg-slate-800 border border-slate-600 transition-all duration-300">1</div>
+                <div id="step2-badge" class="step-indicator w-10 h-10 rounded-full flex items-center justify-center font-bold bg-slate-800 border border-slate-600 transition-all duration-300">2</div>
+                <div id="step3-badge" class="step-indicator w-10 h-10 rounded-full flex items-center justify-center font-bold bg-slate-800 border border-slate-600 transition-all duration-300">3</div>
+            </div>
+
+            <form id="registrationForm" onsubmit="handleFormSubmit(event)">
+                
+                <!-- Step 1: Personal Details -->
+                <div id="step1" class="animate-fade">
+                    <h2 class="text-2xl font-semibold mb-6 flex items-center">
+                        <i class="fas fa-user-circle mr-3 text-blue-400"></i> Personal Information
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-slate-400">Full Name</label>
+                            <input type="text" id="fullName" required class="input-field w-full p-3 rounded-xl text-white" placeholder="">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-slate-400">Email Address</label>
+                            <input type="email" id="email" required class="input-field w-full p-3 rounded-xl text-white" placeholder="">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-slate-400">Phone Number</label>
+                            <input type="tel" id="phone" required class="input-field w-full p-3 rounded-xl text-white" placeholder="">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-slate-400">College Name</label>
+                            <input type="text" id="college" required class="input-field w-full p-3 rounded-xl text-white" placeholder="">
+                        </div>
+                    </div>
+                    <div class="mt-8 flex justify-end">
+                        <button type="button" onclick="nextStep(2)" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-xl transition-all flex items-center shadow-lg shadow-blue-900/20">
+                            Next Step <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Academic & Event Selection -->
+                <div id="step2" class="hidden-step animate-fade">
+                    <h2 class="text-2xl font-semibold mb-6 flex items-center">
+                        <i class="fas fa-code-branch mr-3 text-purple-400"></i> Event Details
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-slate-400">Year of Study</label>
+                            <select id="year" required class="input-field w-full p-3 rounded-xl text-white">
+                                <option value="" disabled selected>Select Year</option>
+                                <option value="1">1st Year</option>
+                                <option value="2">2nd Year</option>
+                                <option value="3">3rd Year</option>
+                                <option value="4">4th Year</option>
+                            </select>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-slate-400">Primary Track</label>
+                            <select id="track" required class="input-field w-full p-3 rounded-xl text-white">
+                                <option value="" disabled selected>Select Interest</option>
+                                <option value="web">Web Development</option>
+                                <option value="ai">AI & Machine Learning</option>
+                                <option value="cyber">Cybersecurity</option>
+                                <option value="robotics">Robotics</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 space-y-4">
+                        <label class="block text-sm font-medium text-slate-400">Select Events to Participate In</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <label class="flex items-center p-4 rounded-xl border border-slate-700 bg-slate-800/40 cursor-pointer hover:bg-slate-700/50 transition-colors">
+                                <input type="checkbox" name="events" value="hackathon" class="w-5 h-5 rounded text-blue-600 bg-slate-900 border-slate-700 mr-3">
+                                <span>Code-A-Thon (24h Hack)</span>
+                            </label>
+                            <label class="flex items-center p-4 rounded-xl border border-slate-700 bg-slate-800/40 cursor-pointer hover:bg-slate-700/50 transition-colors">
+                                <input type="checkbox" name="events" value="quiz" class="w-5 h-5 rounded text-blue-600 bg-slate-900 border-slate-700 mr-3">
+                                <span>Tech Quiz Masters</span>
+                            </label>
+                            <label class="flex items-center p-4 rounded-xl border border-slate-700 bg-slate-800/40 cursor-pointer hover:bg-slate-700/50 transition-colors">
+                                <input type="checkbox" name="events" value="robotics" class="w-5 h-5 rounded text-blue-600 bg-slate-900 border-slate-700 mr-3">
+                                <span>Robo-Sumo Challenge</span>
+                            </label>
+                            <label class="flex items-center p-4 rounded-xl border border-slate-700 bg-slate-800/40 cursor-pointer hover:bg-slate-700/50 transition-colors">
+                                <input type="checkbox" name="events" value="design" class="w-5 h-5 rounded text-blue-600 bg-slate-900 border-slate-700 mr-3">
+                                <span>UI/UX Design Dash</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex justify-between">
+                        <button type="button" onclick="nextStep(1)" class="text-slate-400 hover:text-white font-medium py-3 px-6 transition-all flex items-center">
+                            <i class="fas fa-arrow-left mr-2"></i> Back
+                        </button>
+                        <button type="button" onclick="nextStep(3)" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-xl transition-all flex items-center">
+                            Next Step <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Confirmation & Submit -->
+                <div id="step3" class="hidden-step animate-fade">
+                    <h2 class="text-2xl font-semibold mb-6 flex items-center">
+                        <i class="fas fa-check-circle mr-3 text-green-400"></i> Final Confirmation
+                    </h2>
+                    
+                    <div id="summary" class="bg-slate-900/50 rounded-2xl p-6 border border-slate-700 mb-8 space-y-3">
+                        <!-- Summary injected via JS -->
+                    </div>
+
+                    <div class="space-y-4">
+                        <label class="flex items-start cursor-pointer group">
+                            <input type="checkbox" required class="mt-1 w-5 h-5 rounded text-blue-600 bg-slate-900 border-slate-700 mr-3">
+                            <span class="text-sm text-slate-400 group-hover:text-slate-300">I agree to the terms and conditions of TechNova '25 and confirm that all information provided is accurate.</span>
+                        </label>
+                    </div>
+
+                    <div class="mt-8 flex justify-between">
+                        <button type="button" onclick="nextStep(2)" class="text-slate-400 hover:text-white font-medium py-3 px-6 transition-all flex items-center">
+                            <i class="fas fa-arrow-left mr-2"></i> Back
+                        </button>
+                        <button type="submit" id="submitBtn" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold py-3 px-10 rounded-xl transition-all shadow-xl shadow-blue-500/20">
+                            Complete Registration
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Success Message -->
+            <div id="successMessage" class="hidden-step text-center py-10 animate-fade">
+                <div class="w-20 h-20 bg-green-500/20 text-green-400 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">
+                    <i class="fas fa-paper-plane"></i>
+                </div>
+                <h2 class="text-3xl font-bold mb-4">Registration Successful!</h2>
+                <p class="text-slate-400 mb-8 max-w-md mx-auto">
+                    We've received your registration for TechNova '25. A confirmation email with your entry QR code has been sent to your inbox.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button onclick="window.location.reload()" class="bg-slate-800 hover:bg-slate-700 text-white font-semibold py-3 px-8 rounded-xl transition-all">
+                        Register Another
+                    </button>
+                    <button class="bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-8 rounded-xl transition-all">
+                        Download Receipt
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-slate-500 text-sm">
+            <p>&copy; 2025 TechNova College Fest Committee. Built with passion for technology.</p>
+        </footer>
+    </div>
+
+    <script>
+        let currentStep = 1;
+
+        function nextStep(step) {
+            // Basic validation for Step 1
+            if (step === 2 && currentStep === 1) {
+                if (!document.getElementById('fullName').value || !document.getElementById('email').value || !document.getElementById('phone').value) {
+                    showMessage('Please fill in all personal details.', 'error');
+                    return;
+                }
+            }
+
+            // Basic validation for Step 2
+            if (step === 3 && currentStep === 2) {
+                const checkboxes = document.querySelectorAll('input[name="events"]:checked');
+                if (checkboxes.length === 0) {
+                    showMessage('Please select at least one event.', 'error');
+                    return;
+                }
+                updateSummary();
+            }
+
+            // Hide all steps
+            document.getElementById('step1').classList.add('hidden-step');
+            document.getElementById('step2').classList.add('hidden-step');
+            document.getElementById('step3').classList.add('hidden-step');
+
+            // Show selected step
+            document.getElementById('step' + step).classList.remove('hidden-step');
+            
+            // Update badges
+            updateBadges(step);
+            currentStep = step;
+        }
+
+        function updateBadges(step) {
+            for (let i = 1; i <= 3; i++) {
+                const badge = document.getElementById('step' + i + '-badge');
+                if (i <= step) {
+                    badge.classList.add('active');
+                } else {
+                    badge.classList.remove('active');
+                }
+            }
+        }
+
+        function updateSummary() {
+            const name = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const track = document.getElementById('track').options[document.getElementById('track').selectedIndex].text;
+            const checkboxes = document.querySelectorAll('input[name="events"]:checked');
+            let eventsList = Array.from(checkboxes).map(cb => cb.parentNode.innerText.trim()).join(', ');
+
+            const summaryHtml = `
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div><span class="text-slate-500">Name:</span> <br> <span class="text-white font-semibold">${name}</span></div>
+                    <div><span class="text-slate-500">Email:</span> <br> <span class="text-white font-semibold">${email}</span></div>
+                    <div><span class="text-slate-500">Selected Track:</span> <br> <span class="text-white font-semibold">${track}</span></div>
+                    <div class="col-span-2"><span class="text-slate-500">Participating In:</span> <br> <span class="text-blue-400 font-semibold">${eventsList}</span></div>
+                </div>
+            `;
+            document.getElementById('summary').innerHTML = summaryHtml;
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> Processing...';
+            btn.disabled = true;
+
+            // Simulate API call
+            setTimeout(() => {
+                document.getElementById('registrationForm').classList.add('hidden-step');
+                document.querySelector('.flex.items-center.justify-between').classList.add('hidden-step');
+                document.getElementById('successMessage').classList.remove('hidden-step');
+            }, 1500);
+        }
+
+        function showMessage(msg, type) {
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-8 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full shadow-2xl z-50 animate-fade ${type === 'error' ? 'bg-red-500 text-white' : 'bg-blue-600 text-white'}`;
+            toast.innerText = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
