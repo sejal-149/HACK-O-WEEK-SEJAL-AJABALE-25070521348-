@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luvly Jewelry | Official Store</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Smooth transitions for the cart modal */
+        .modal-overlay {
+            transition: opacity 0.3s ease;
+            display: none;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        /* Loading shimmer effect for images */
+        .img-container {
+            background: linear-gradient(90deg, #fce7f3 25%, #fbcfe8 50%, #fce7f3 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body class="bg-rose-50 font-sans text-gray-800">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-md p-4 sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-pink-500 flex items-center gap-2 cursor-pointer" onclick="window.location.reload()">
+                <span>🌸</span> Luvly Jewelry
+            </h1>
+            
+            <!-- Cart Button -->
+            <button onclick="toggleCart()" class="relative bg-pink-100 text-pink-600 px-5 py-2 rounded-full font-bold hover:bg-pink-200 transition flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+                <span>Cart</span>
+                <span id="cart-count" class="absolute -top-2 -right-2 bg-pink-500 text-white text-xs w-6 h-6 rounded-full flex items-center justify-center border-2 border-white">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Banner -->
+    <header class="text-center py-16 bg-gradient-to-b from-white to-rose-50">
+        <h2 class="text-4xl font-extrabold text-gray-900 mb-2">Dainty & Cute Jewelry</h2>
+        <p class="text-gray-500 text-lg">Handcrafted pieces to make you sparkle ✨</p>
+    </header>
+
+    <!-- Product Grid -->
+    <main class="max-w-5xl mx-auto px-4 pb-20">
+        <div id="product-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Products are injected here by JavaScript -->
+        </div>
+    </main>
+
+    <!-- Shopping Cart Modal -->
+    <div id="cart-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-50 z-[60] items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl">
+            <!-- Modal Header -->
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+                <h3 class="text-xl font-bold">Your Shopping Bag</h3>
+                <button onclick="toggleCart()" class="text-gray-400 hover:text-gray-600 text-2xl font-light">&times;</button>
+            </div>
+            
+            <!-- Cart Items List -->
+            <div id="cart-items" class="p-6 max-h-96 overflow-y-auto">
+                <p class="text-gray-400 text-center py-10">Your cart is empty!</p>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-6 bg-gray-50 border-t border-gray-100">
+                <div class="flex justify-between items-center mb-6">
+                    <span class="text-gray-600 font-medium">Total Amount:</span>
+                    <span id="cart-total" class="text-2xl font-bold text-pink-600">₹0</span>
+                </div>
+                <button onclick="checkout()" class="w-full bg-pink-500 text-white py-4 rounded-2xl font-bold text-lg hover:bg-pink-600 transition shadow-lg shadow-pink-200">
+                    Checkout Now
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Data: Updated high-quality jewelry images
+        const myProducts = [
+            { 
+                id: 1, 
+                name: "Butterfly Gold Pendant", 
+                price: 399, 
+                image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&auto=format&fit=crop" 
+            },
+            { 
+                id: 2, 
+                name: "Pearl Charm Bracelet", 
+                price: 450, 
+                image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=600&auto=format&fit=crop" 
+            },
+            { 
+                id: 3, 
+                name: "Daisy Stud Earrings", 
+                price: 199, 
+                image: "https://images.unsplash.com/photo-1635767798638-3e25273a8236?w=600&auto=format&fit=crop" 
+            },
+            { 
+                id: 4, 
+                name: "Starry Night Ring Set", 
+                price: 299, 
+                image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&auto=format&fit=crop" 
+            },
+            { 
+                id: 5, 
+                name: "Golden Heart Locket", 
+                price: 550, 
+                image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&auto=format&fit=crop" 
+            },
+            { 
+                id: 6, 
+                name: "Crystal Rose Anklet", 
+                price: 350, 
+                image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600&auto=format&fit=crop" 
+            }
+        ];
+
+        let cart = [];
+
+        // 2. Display logic with "onerror" fallback
+        function displayProducts() {
+            const container = document.getElementById('product-container');
+            container.innerHTML = myProducts.map(product => `
+                <div class="bg-white p-4 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 group">
+                    <div class="img-container w-full h-64 rounded-2xl mb-4 overflow-hidden">
+                        <img 
+                            src="${product.image}" 
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                            alt="${product.name}"
+                            onerror="this.src='https://via.placeholder.com/600x600?text=Jewelry+Item'"
+                            onload="this.parentElement.style.animation='none'; this.parentElement.style.background='white';"
+                        >
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800">${product.name}</h3>
+                    <div class="flex justify-between items-center mt-2">
+                        <p class="text-pink-500 font-bold text-xl">₹${product.price}</p>
+                        <button onclick="addToCart(${product.id})" class="bg-pink-500 text-white px-5 py-2 rounded-xl text-sm font-bold hover:bg-pink-600 transition shadow-md">
+                            Add +
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 3. Cart Operations
+        function addToCart(productId) {
+            const item = myProducts.find(p => p.id === productId);
+            cart.push(item);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            document.getElementById('cart-count').innerText = cart.length;
+            const cartItemsContainer = document.getElementById('cart-items');
+            const totalDisplay = document.getElementById('cart-total');
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `<p class="text-gray-400 text-center py-10">Your cart is empty!</p>`;
+                totalDisplay.innerText = "₹0";
+            } else {
+                let total = 0;
+                cartItemsContainer.innerHTML = cart.map((item, index) => {
+                    total += item.price;
+                    return `
+                        <div class="flex items-center justify-between mb-4 bg-rose-50 p-3 rounded-xl">
+                            <div class="flex items-center gap-3">
+                                <img src="${item.image}" class="w-12 h-12 rounded-lg object-cover bg-white" onerror="this.src='https://via.placeholder.com/100?text=Jewel'">
+                                <div>
+                                    <p class="font-bold text-sm leading-tight">${item.name}</p>
+                                    <p class="text-pink-500 text-xs font-bold">₹${item.price}</p>
+                                </div>
+                            </div>
+                            <button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-600 p-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>
+                    `;
+                }).join('');
+                totalDisplay.innerText = "₹" + total;
+            }
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function toggleCart() {
+            const modal = document.getElementById('cart-modal');
+            modal.classList.toggle('active');
+        }
+
+        function checkout() {
+            if (cart.length === 0) return;
+            alert("Order placed successfully! ✨");
+            cart = [];
+            updateCartUI();
+            toggleCart();
+        }
+
+        displayProducts();
+    </script>
+</body>
+</html>
