@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JAADU KA SWAD | Authentic Indian Cuisine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Crimson+Pro:wght@400;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --rose-pink: #db2777;
+            --soft-rose: #fdf2f8;
+            --gold: #d4af37;
+            --magenta: #831843;
+            --cream: #fffafb;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--cream);
+            color: #2D2D2D;
+            /* Subtle floral/henna pattern */
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 30c2-5 8-5 10 0-2 5-8 5-10 0zm0 0c-2-5-8-5-10 0 2 5 8 5 10 0zm0 0c5-2 5-8 0-10-5 2-5 8 0 10zm0 0c5 2 5 8 0 10-5-2-5-8 0-10z' fill='%23db2777' fill-opacity='0.04'/%3E%3C/svg%3E");
+        }
+
+        h1, h2, h3 {
+            font-family: 'Crimson Pro', serif;
+            letter-spacing: -0.01em;
+        }
+
+        .script-font {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--magenta) 0%, var(--rose-pink) 100%);
+            color: white;
+            border-bottom: 4px solid var(--gold);
+        }
+
+        .menu-item {
+            border-bottom: 1px solid #f9a8d444;
+            padding: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover {
+            background-color: var(--soft-rose);
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+            border-radius: 12px;
+        }
+
+        .category-btn {
+            position: relative;
+            padding-bottom: 8px;
+            color: var(--magenta);
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .category-btn.active {
+            color: var(--rose-pink);
+        }
+
+        .category-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 3px;
+            background-color: var(--rose-pink);
+            border-radius: 10px;
+        }
+
+        .symbol {
+            width: 14px;
+            height: 14px;
+            border-width: 1.5px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+            background: white;
+        }
+        .veg-sym { border-color: #16a34a; }
+        .veg-sym::after {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: #16a34a;
+            border-radius: 50%;
+        }
+        .nonveg-sym { border-color: #dc2626; }
+        .nonveg-sym::after {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: #dc2626;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+
+        .price-tag {
+            color: var(--rose-pink);
+            font-family: 'Crimson Pro', serif;
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .special-badge {
+            font-size: 10px;
+            background: var(--soft-rose);
+            color: var(--rose-pink);
+            padding: 2px 8px;
+            border-radius: 99px;
+            border: 1px solid var(--rose-pink);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Boutique Style Header -->
+    <header class="py-16 text-center relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(white 1px, transparent 1px); background-size: 30px 30px;"></div>
+        
+        <div class="relative z-10">
+            <span class="script-font text-3xl text-pink-100 block mb-2">Welcome to</span>
+            <h1 class="text-5xl md:text-7xl font-bold mb-4 uppercase tracking-[0.15em] italic">JAADU KA SWAD</h1>
+            <p class="text-white/80 uppercase tracking-[0.4em] text-xs font-semibold">Handcrafted Authentic Flavors</p>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 bg-white/95 backdrop-blur-md z-30 shadow-sm border-b border-pink-100">
+        <div class="max-w-3xl mx-auto px-6 py-5 flex justify-between overflow-x-auto whitespace-nowrap gap-8 scrollbar-hide">
+            <button onclick="filterMenu('all')" class="category-btn active text-sm tracking-widest uppercase">The Menu</button>
+            <button onclick="filterMenu('starters')" class="category-btn text-sm tracking-widest uppercase">Starters</button>
+            <button onclick="filterMenu('mains')" class="category-btn text-sm tracking-widest uppercase">Entrées</button>
+            <button onclick="filterMenu('breads')" class="category-btn text-sm tracking-widest uppercase">Breads</button>
+            <button onclick="filterMenu('desserts')" class="category-btn text-sm tracking-widest uppercase">Sweets</button>
+        </div>
+    </nav>
+
+    <!-- Menu List -->
+    <main class="max-w-3xl mx-auto px-6 py-12 min-h-screen">
+        <div class="text-center mb-10">
+            <h2 class="script-font text-4xl text-pink-600">Our Culinary Secrets</h2>
+            <div class="w-16 h-1 bg-pink-100 mx-auto mt-4 rounded-full"></div>
+        </div>
+        <div id="menu-container">
+            <!-- Items injected here -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-16 bg-[#2d0a1c] text-pink-100/70 text-center border-t-8 border-pink-500">
+        <div class="max-w-xl mx-auto px-6">
+            <h2 class="text-3xl font-bold text-pink-400 mb-4 italic uppercase tracking-widest">JAADU KA SWAD</h2>
+            <p class="text-sm mb-8 leading-relaxed italic">Curated with love, aromatic spices, and a touch of magic. Perfect for your next girls' brunch or elegant dinner.</p>
+            <div class="flex flex-col gap-4 text-xs font-bold tracking-widest pt-6 border-t border-white/5">
+                <div class="flex justify-center gap-8">
+                    <span>LUNCH: 12:00 PM - 4:00 PM</span>
+                    <span>DINNER: 7:00 PM - 11:00 PM</span>
+                </div>
+                <p class="text-pink-300">ESTABLISHED 1998 • MADE WITH LOVE</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const menuItems = [
+            {
+                name: "Vegetable Samosa",
+                category: "starters",
+                price: "150",
+                description: "Hand-crafted crispy pastry filled with spiced potatoes and tempered peas.",
+                type: "veg",
+                label: "Favorite"
+            },
+            {
+                name: "Chicken Tikka Angara",
+                category: "starters",
+                price: "380",
+                description: "Charcoal-grilled chicken chunks marinated in a secret blend of spicy red chillies.",
+                type: "nonveg",
+                label: "Hot"
+            },
+            {
+                name: "Paneer Tikka",
+                category: "starters",
+                price: "320",
+                description: "Soft cottage cheese marinated in hung curd and yellow chillies, cooked in the clay oven.",
+                type: "veg",
+                label: ""
+            },
+            {
+                name: "Butter Chicken",
+                category: "mains",
+                price: "450",
+                description: "Tender tandoori chicken simmered in a smooth tomato and cream gravy with dried fenugreek.",
+                type: "nonveg",
+                label: "Bestseller"
+            },
+            {
+                name: "Dal Makhani",
+                category: "mains",
+                price: "340",
+                description: "Black lentils slow-cooked for 24 hours with white butter and fresh cream. Silky and smooth.",
+                type: "veg",
+                label: ""
+            },
+            {
+                name: "Hyderabadi Biryani",
+                category: "mains",
+                price: "420",
+                description: "Long-grain basmati rice cooked on 'Dum' with aromatic spices and saffron.",
+                type: "nonveg",
+                label: ""
+            },
+            {
+                name: "Garlic Naan",
+                category: "breads",
+                price: "70",
+                description: "Leavened refined flour bread topped with minced garlic and butter.",
+                type: "veg",
+                label: ""
+            },
+            {
+                name: "Gulab Jamun",
+                category: "desserts",
+                price: "120",
+                description: "Warm milk dumplings soaked in cardamom flavored sugar syrup. A sweet delight.",
+                type: "veg",
+                label: "Must Try"
+            },
+            {
+                name: "Mango Kulfi",
+                category: "desserts",
+                price: "160",
+                description: "Traditional frozen dairy dessert made with reduced milk and fresh Alfonso pulp.",
+                type: "veg",
+                label: ""
+            }
+        ];
+
+        function renderMenu(items) {
+            const container = document.getElementById('menu-container');
+            container.innerHTML = '';
+
+            items.forEach(item => {
+                const symClass = item.type === 'veg' ? 'veg-sym' : 'nonveg-sym';
+                const labelHtml = item.label ? `<span class="special-badge ml-3">${item.label}</span>` : '';
+                
+                const html = `
+                    <div class="menu-item flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div class="max-w-xl">
+                            <div class="flex items-center mb-1">
+                                <span class="symbol ${symClass}"></span>
+                                <h3 class="text-xl font-bold text-[#5c1a3b]">${item.name}</h3>
+                                ${labelHtml}
+                            </div>
+                            <p class="text-stone-500 text-sm leading-relaxed font-light italic">
+                                ${item.description}
+                            </p>
+                        </div>
+                        <div class="flex items-center md:flex-col md:items-end">
+                            <span class="price-tag text-2xl font-bold italic">₹${item.price}</span>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        function filterMenu(category) {
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.innerText.toLowerCase().includes(category.toLowerCase()) || 
+                    (category === 'all' && btn.innerText.includes('MENU'))) {
+                    btn.classList.add('active');
+                }
+            });
+
+            if (category === 'all') {
+                renderMenu(menuItems);
+            } else {
+                renderMenu(menuItems.filter(i => i.category === category));
+            }
+        }
+
+        window.onload = () => renderMenu(menuItems);
+    </script>
+</body>
+</html>
