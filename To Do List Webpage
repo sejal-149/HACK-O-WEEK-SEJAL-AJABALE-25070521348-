@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tasks</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; max-width: 400px; }
+        .task-item { display: flex; justify-content: space-between; margin-bottom: 5px; border-bottom: 1px solid #eee; padding: 5px 0; }
+        .done { text-decoration: line-through; color: gray; }
+    </style>
+</head>
+<body>
+
+    <h3>My Tasks</h3>
+    
+    <input type="text" id="input" placeholder="New task...">
+    <button onclick="add()">Add</button>
+
+    <ul id="list" style="list-style: none; padding: 0;"></ul>
+
+    <script>
+        // Load saved tasks or start with an empty array
+        let tasks = JSON.parse(localStorage.getItem('my_tasks')) || [];
+
+        function save() {
+            // Save the current tasks array to browser storage
+            localStorage.setItem('my_tasks', JSON.stringify(tasks));
+        }
+
+        function add() {
+            const val = document.getElementById('input').value;
+            if (val) {
+                tasks.push({ text: val, done: false });
+                document.getElementById('input').value = '';
+                save();
+                render();
+            }
+        }
+
+        function toggle(index) {
+            tasks[index].done = !tasks[index].done;
+            save();
+            render();
+        }
+
+        function remove(index) {
+            tasks.splice(index, 1);
+            save();
+            render();
+        }
+
+        function render() {
+            const list = document.getElementById('list');
+            list.innerHTML = tasks.map((t, i) => `
+                <li class="task-item">
+                    <span class="${t.done ? 'done' : ''}" onclick="toggle(${i})" style="cursor:pointer">${t.text}</span>
+                    <button onclick="remove(${i})">x</button>
+                </li>
+            `).join('');
+        }
+
+        // Run initial render to show saved data
+        render();
+    </script>
+</body>
+</html>
