@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symbiosis Institute of Technology College Test</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        #quiz-box {
+            background: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .header-area {
+            text-align: center;
+            border-bottom: 2px solid #eee;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+        .header-area h2 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: #b91c1c;
+        }
+        .option {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            text-align: left;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            background: #fff;
+            border-radius: 4px;
+        }
+        .option:hover {
+            background-color: #f9f9f9;
+        }
+        .selected {
+            background-color: #d1e7ff;
+            border-color: #007bff;
+        }
+        .hidden {
+            display: none;
+        }
+        .footer {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #counter {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        button#next-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="quiz-box">
+        <div class="header-area">
+            <h2>Symbiosis Institute of Technology</h2>
+            <small>Internal Assessment Test</small>
+        </div>
+
+        <div id="quiz-ui">
+            <div id="counter">Question 1 of 5</div>
+            <p id="question" style="font-weight: bold; margin-top: 15px;">Loading...</p>
+            <div id="options-list"></div>
+            
+            <div class="footer">
+                <span></span>
+                <button id="next-btn" disabled onclick="nextQuestion()">Next</button>
+            </div>
+        </div>
+
+        <div id="result-ui" class="hidden" style="text-align: center;">
+            <h2>Test Completed</h2>
+            <p id="score-report"></p>
+            <button onclick="location.reload()" style="padding: 8px 16px;">Restart Test</button>
+        </div>
+    </div>
+
+    <script>
+        // A larger pool of questions to choose from
+        const questionPool = [
+            { q: "What is 2 + 2?", a: ["3", "4", "5"], correct: 1 },
+            { q: "Color of the sky?", a: ["Green", "Blue", "Red"], correct: 1 },
+            { q: "Capital of France?", a: ["London", "Berlin", "Paris"], correct: 2 },
+            { q: "Opposite of 'Hot'?", a: ["Cold", "Warm", "Dry"], correct: 0 },
+            { q: "A triangle has how many sides?", a: ["2", "3", "4"], correct: 1 },
+            { q: "Which planet is the 'Red Planet'?", a: ["Mars", "Venus", "Saturn"], correct: 0 },
+            { q: "Fastest land animal?", a: ["Lion", "Cheetah", "Horse"], correct: 1 },
+            { q: "Who wrote 'Hamlet'?", a: ["Shakespeare", "Dickens", "Twain"], correct: 0 },
+            { q: "Largest ocean on Earth?", a: ["Atlantic", "Indian", "Pacific"], correct: 2 },
+            { q: "Chemical symbol for Water?", a: ["CO2", "H2O", "O2"], correct: 1 }
+        ];
+
+        let activeQuestions = [];
+        let index = 0;
+        let score = 0;
+        let selected = null;
+
+        // Function to shuffle any array
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        function initQuiz() {
+            // 1. Shuffle the pool and pick the first 5
+            const shuffledPool = shuffle([...questionPool]);
+            activeQuestions = shuffledPool.slice(0, 5);
+            
+            index = 0;
+            score = 0;
+            load();
+        }
+
+        function load() {
+            selected = null;
+            document.getElementById('next-btn').disabled = true;
+            
+            const current = activeQuestions[index];
+            document.getElementById('counter').innerText = `Question ${index + 1} of 5`;
+            document.getElementById('question').innerText = current.q;
+            
+            const list = document.getElementById('options-list');
+            list.innerHTML = "";
+            
+            current.a.forEach((text, i) => {
+                const btn = document.createElement('button');
+                btn.innerText = text;
+                btn.className = "option";
+                btn.onclick = () => {
+                    selected = i;
+                    document.getElementById('next-btn').disabled = false;
+                    Array.from(list.children).forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                };
+                list.appendChild(btn);
+            });
+        }
+
+        function nextQuestion() {
+            if (selected === activeQuestions[index].correct) {
+                score++;
+            }
+            
+            index++;
+            if (index < activeQuestions.length) {
+                load();
+            } else {
+                document.getElementById('quiz-ui').classList.add('hidden');
+                document.getElementById('result-ui').classList.remove('hidden');
+                document.getElementById('score-report').innerHTML = `<strong>Result:</strong> ${score} / 5 Correct`;
+            }
+        }
+
+        // Start the quiz
+        initQuiz();
+    </script>
+</body>
+</html>
